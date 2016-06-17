@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'apps.notification'
+    'apps.notifications'
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -104,7 +104,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
+AUTH_USER_MODEL = "notifications.MyUser"
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
