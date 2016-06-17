@@ -68,3 +68,7 @@ temp/
 
 ## DB
 db.*
+
+## celery
+celerybeat.pid
+celerybeat-schedule.db

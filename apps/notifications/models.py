@@ -7,4 +7,12 @@ from django.contrib.auth.models import AbstractUser
 # Create your models here.
 
 class MyUser(AbstractUser):
-	notification_count = models.IntegerField(default=0)
+	new_notification_count = models.IntegerField(default=0)
+
+class Notification(models.Model):
+	user = models.ForeignKey(MyUser, related_name='user')
+	notifier = models.ForeignKey(MyUser, related_name='notifier')
+	notification_type = models.CharField( max_length=15 ) ## comment, like or share
+	notification_media = models.CharField( max_length=15 )  ## post, picture, video
+	status = models.BooleanField(default=False)  ## read or unread
+	time_of_creation = models.DateTimeField(auto_now=True, auto_now_add=False)
