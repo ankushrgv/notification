@@ -18,7 +18,7 @@ app = Celery('config')
 app.config_from_object('django.conf:settings')
 app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
 
-t = random.randint(10, 30)
+t = random.randint(5, 15)
 print "time = ", t
 
 ## celery app configuration
