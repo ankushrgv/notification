@@ -1,0 +1,15 @@
+{% extends 'layout/base.html' %}
+
+{% block layout %}
+<div class="content">
+	<div class="container">
+		<div class="row">
+			<ul>
+				<li>{{ user_obj.username}}</li>
+				<li>{{ user_obj.first_name}}</li>
+				<li>{{ user_obj.last_name}}</li>
+			</ul>
+		</div>
+	</div>
+</div>
+{% endblock layout %} 

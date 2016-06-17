@@ -1,0 +1,27 @@
+{% extends 'layout/single_form_layout.html' %}
+
+{% block layout %}
+{{ block.super }}
+<div class="container">
+    <div class="form centered">
+        <form role="form" method="POST">
+            {% csrf_token %}
+            <div class="row">
+                <div class="twelve columns">
+                    <label for="id_username">Username</label>
+                    <input id="id_username" type="text" name="username" class="u-full-width" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="twelve columns">
+                    <label for="id_password">Password</label>
+                    <input id="id_password" type="password" name="password" class="u-full-width" />
+                </div>
+            </div>
+            <div class="row">
+                <input class="button-primary u-full-width" type="submit" value="Login">
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock layout %}

@@ -1,0 +1,21 @@
+{% load static from staticfiles %}
+<html>
+    <head>
+        <title>{% block title %}Wingify{% endblock title %}</title>
+        <!-- CSS Stylesheets -->
+    </head>
+    <body>
+        {% block header %}
+            {% include 'partials/header.html' %}
+        {% endblock header %}
+
+        {% block notifications %}
+
+        {% endblock notifications %}
+
+        {% block layout %}
+        {% endblock layout %}
+
+        
+    </body>
+</html>

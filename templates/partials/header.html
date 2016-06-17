@@ -1,0 +1,19 @@
+<div class="header">
+    <nav class="navbar">
+        <div class="container">
+            <ul class="navbar-list text-nav u-pull-right">
+                {% if user.is_authenticated %}
+                    <li class="heading">
+                        <h2> Wingify </h2>
+                    </li>
+                    <li class="navbar-item">
+                    {{ user.username }}, 
+                        <a class="navbar-link" href="{% url 'accounts:logout' %}">
+                            Logout
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+</div>
