@@ -72,3 +72,4 @@ db.*
 ## celery
 celerybeat.pid
 celerybeat-schedule.db
+celerybeat-schedule

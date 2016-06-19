@@ -1,13 +1,9 @@
 $(document).on('ready', function(){
 
-	// $(document).on('click','.body-container', function(event){
- //       	// $(document).find('.active-bell').removeClass('active-bell');
- //        // $this.removeClass('active-bell');
- //        closeNav();
- //    });
  	$('#arrow').hide();
 	$(document).on('click','.notify', function(event){
         // alert("clicked");
+        event.stopPropagation();
         $this = $(this);
         $this.addClass('active-bell');
         openNav();
@@ -17,6 +13,22 @@ $(document).on('ready', function(){
         $this = $(this);
         $this.removeClass('active-bell');
         closeNav();
+    });
+
+    // elem_list = document.querySelectorAll(".notification-container, .notify");
+    // console.log(elem_list);
+
+	$(document).not(document.querySelectorAll(".notification-container, .notify")).on('click', function(event){
+        console.log("outside notification container clicked");
+        // $this = $(this);
+        $(document).find('.active-bell').removeClass('active-bell');
+        closeNav();
+    });
+
+
+
+    $('.notification-container').click(function(event){
+    	event.stopPropagation();
     });
 
 });
