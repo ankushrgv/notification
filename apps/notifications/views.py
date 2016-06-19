@@ -9,18 +9,20 @@ class Index(TemplateView):
 
 	def get_context_data(self, **kwargs):
 
-		user_id = self.request.user.id
-		print "user_id = ", user_id
-
+		user_id_value = self.request.user.id
+		print "user_id_value = ", user_id_value
 		context = super(Index, self).get_context_data(**kwargs)
 
-		user_obj = models.MyUser.objects.get(id = user_id)
-		print "user_obj = ", user_obj
+		user_obj = models.MyUser.objects.get(id = user_id_value)
+		notification_count = user_obj.new_notification_count
 
-		new_notifications = user_obj.new_notification_count
+
+		notification_list = models.Notification.objects.filter(notified_user_id=user_id_value)
+		print "notification_list = ", notification_list
 
 		context['user_obj'] = user_obj
-		context['new_notifications'] = new_notifications
+		context['notification_count'] = notification_count
+		context['notifications'] = notification_list
 
 		user_obj.new_notification_count = 0
 		user_obj.save()

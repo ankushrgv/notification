@@ -1,16 +1,40 @@
+
 {% extends 'layout/base.html' %}
+
+{% load static from staticfiles %}
+
+
+{% block header %}
+    {% include 'partials/header.html' %}
+{% endblock header %}
 
 {% block layout %}
 <div class="content">
 	<div class="container">
 		<div class="row">
-			<ul>
-				<li>{{ user_obj.username}}</li>
-				<li>{{ user_obj.first_name}}</li>
-				<li>{{ user_obj.last_name}}</li>
-				<li>{{ new_notifications}}</li>
-			</ul>
+			<h1> Hi {{user.first_name}} </h1>
 		</div>
+	</div>
+	<div class="arrow" id="arrow">
+		<img src="{% static 'images/uparrow.png' %}" height="50px" width="50px"></img>
+	</div>
+	<div id="myNav" class="notification-container">
+		<div class="notification-content">
+			<div class="notification-heading">
+				<h2> Notifications {{ notification_count}}</h2>
+			</div>
+			<div class="items" id="items">
+			    <ul class="notifications-items">
+			    	{% for item in notifications%}
+			    		<li>
+			    			<h3>{{item.notifier.first_name}} {{item.notifier.last_name}}</h3>
+			    			<h4>{{item.notification_type}} your {{item.notification_media}}</h4>
+			    			<p>{{item.time_of_creation}}</p>
+			    		</li>
+			    	{% endfor%}
+			    </ul>
+			</div>
+	    </div>
 	</div>
 </div>
 {% endblock layout %} 

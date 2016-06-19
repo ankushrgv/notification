@@ -3,19 +3,22 @@
     <head>
         <title>{% block title %}Wingify{% endblock title %}</title>
         <!-- CSS Stylesheets -->
+        <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}" />
+
+        <!-- Javascript -->
+        <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
     </head>
-    <body>
-        {% block header %}
-            {% include 'partials/header.html' %}
-        {% endblock header %}
+    <body background="{% static 'bg_images/w4.png' %}">
+        <div class="body-container">
+            {% block header %}
+            {% endblock header %}
 
-        {% block notifications %}
+            {% block notifications %}
+            {% endblock notifications %}
 
-        {% endblock notifications %}
-
-        {% block layout %}
-        {% endblock layout %}
-
-        
+            {% block layout %}
+            {% endblock layout %}
+        </div>
     </body>
 </html>

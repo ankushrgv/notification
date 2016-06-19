@@ -24,15 +24,11 @@ class CreateNotifications(Task):
 		to = 0
 		
 		while to_user is None:
-
 			to = random.randint(lower_limit['id__min'], upper_limit['id__max'])
-
 			try:
 				to_user = models.MyUser.objects.get(id=to)
 			except:
 				pass
-
-
 
 		## select a user to be notified from randomly
 
@@ -40,10 +36,8 @@ class CreateNotifications(Task):
 		frm = to
 
 		while frm_user is None:
-			
 			while frm == to:
 				frm = random.randint(lower_limit['id__min'], upper_limit['id__max'])
-			
 			try:
 				frm_user = models.MyUser.objects.get(id=frm)
 			except:
@@ -53,7 +47,7 @@ class CreateNotifications(Task):
 		notif_media = ['post', 'picture', 'video']
 
 		models.Notification.objects.create(
-			user = to_user,
+			notified_user = to_user,
 			notifier = frm_user,
 			notification_type = random.choice(notif_type),
 			notification_media = random.choice(notif_media))

@@ -1,0 +1,179 @@
+body {
+    font-family: "Proxima Nova", Helvetica Neue, Helvetica, Arial, sans-serif;
+    margin: 0;
+    /*height: 100%;
+    width: 100%;*/
+
+}
+
+/*.body-container{
+    height: 100%;
+    width: 100%;
+}
+*/
+.header{
+	background-color: #000000;
+	color: #ffffff;
+	height:75px;
+}
+
+.heading{
+	display: inline-block;
+	width: 315px;
+	text-align: center;
+	margin-left: 150px;
+}
+
+.heading h2{
+    margin-bottom: 15px;
+    margin-top: 10px;
+    font-size: 50px;
+    font-family: "Oreos";
+}
+
+.content{
+	width:100%;
+	height:50%;
+}
+
+.content .container {
+	margin-left: 30px;
+	width:55%;
+	height:100%;
+	display: inline-block;
+}
+
+.arrow{
+	float: right;
+	display: inline-block;
+    height: 50px;
+    width: 50px;
+    margin-right: 344px;
+    margin-top: -18px;
+    /*background-color: #000000;*/
+}
+
+.notifications{
+	display: inline-block;
+	width:70px;
+	margin-left: 450px
+}
+
+.notification-bell{
+	display: inline-block;
+}
+
+.count{
+	display: inline-block;
+	height: 20px;
+    margin-left: -16px;
+    margin-top: -60px;
+    width: 20px;
+    color: #ffffff;
+    background-color: #FF3385;
+    text-align: center;
+    border-radius: 15px;
+    border-style: solid;
+    border-color: #000000;
+    font-size: 12px;
+    padding-left: 2px;
+    padding-right: 2px;
+    padding-top: 3px;
+}
+
+.notification-bell img{
+	height: 40px;
+	width: 40px;
+}
+
+.logout{
+	position: absolute;
+	display: inline-block;
+	width: 150px;
+	margin-left: 80px;
+	margin-top: 25px;
+}
+
+.logout a{
+	text-decoration: none;
+	color: #ffffff;
+}
+
+.content{
+	position: absolute;
+	display: block;
+}
+
+
+.notification-container {
+	margin-top: 85px;
+	margin-right: 80px;
+    height: 0%;
+    width:40%;
+    position: fixed;
+    z-index: 1;
+    right: 0;
+    top: 0;
+    background-color: rgba(0,0,0, 0.9);
+    background-color: #ADADAD;
+    overflow: hidden;
+    transition: 0.5s;
+    border-radius: 15px;
+    /*box-shadow: 10px 10px 5px 10px #ffffff;*/
+}
+
+.notification-container:hover {
+	overflow-y:scroll;
+}
+
+.notification-container li{
+	list-style: none;
+	border-width: 0 0 1px 0;
+	border-style: solid;
+	width: 430px;
+	text-align: left;
+}
+
+.notification-container h3, h4{
+	display: inline-block;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.notification-container p{
+	display: block;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	font-size: 13px;
+}
+
+.notification-container a {
+    padding: 8px;
+    text-decoration: none;
+    font-size: 36px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+}
+
+.notification-container a:hover, .notification-container a:focus {
+    color: #f1f1f1;
+}
+
+.notification-heading{
+	background-color: #5C5C5C;
+	height:71px;
+}
+
+.notification-heading h2{
+	height: 37px;
+	width: 450px;
+    margin-bottom: 0;
+    margin-top: 0;
+    margin-left: 40px;
+    padding-bottom: 17px;
+    padding-top: 17px;
+    text-align: center;
+}
+
+
