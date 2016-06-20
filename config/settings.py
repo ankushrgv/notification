@@ -130,3 +130,8 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 ## Authentication
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
+
+
+CELERYD_OPTS="--concurrency=1"
+
+CELERY_IMPORTS = ['apps.notifications.tasks']

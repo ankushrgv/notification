@@ -14,5 +14,5 @@ class Notification(models.Model):
 	notifier = models.ForeignKey(MyUser, related_name='notifier')
 	notification_type = models.CharField( max_length=15 ) ## comment, like or share
 	notification_media = models.CharField( max_length=15 )  ## post, picture, video
-	status = models.BooleanField(default=False)  ## read or unread
-	time_of_creation = models.DateTimeField(auto_now=True, auto_now_add=False)
+	status = models.IntegerField(default=0)  ## read or unread
+	time_of_creation = models.DateTimeField(auto_now=False, auto_now_add=True)

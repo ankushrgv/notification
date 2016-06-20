@@ -5,26 +5,11 @@
 {{ block.super }} - Login to your account
 {% endblock title %}
 
-{% block notifications %}
-    {% if form.errors %}
-        <div class="notifications error">
-            {% for field in form %}
-                {% if field.errors %}
-                    <p><strong>{{ field.name|title }}:</strong> {{ field.errors.0 }}</p>
-                {% endif %}
-             {% endfor %}
-             <p class="non-field">{{ form.non_field_errors.0 }}</p>
-        </div>
-    {% endif %}
-{% endblock notifications %}
 
 
-{% block layout %}
+{% block login_layout %}
+
     {% block centered_logo %}
-    <div class="container sfl">
-        <div class="big-logo centered">
-            <strong>Wingi<span class="blue">fy</span></strong>
-        </div>
-    </div>
+   
     {% endblock centered_logo %}
-{% endblock layout %}
+{% endblock login_layout %}

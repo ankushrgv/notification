@@ -11,8 +11,8 @@
 {% block layout %}
 <div class="content">
 	<div class="container">
-		<div class="row">
-			<h1> Hi {{user.first_name}} </h1>
+		<div class="home-container">
+			<h3>Welcome</h3> <h4> {{user.first_name}} </h4>
 		</div>
 	</div>
 	<div class="arrow" id="arrow">
@@ -26,7 +26,11 @@
 			<div class="items" id="items">
 			    <ul class="notifications-items">
 			    	{% for item in notifications%}
-			    		<li>
+			    		{% if item.status == 0 %}
+			    			<li id="unread">
+			    		{% else %}
+				    		<li id="read">
+			    		{% endif %}
 			    			<h3>{{item.notifier.first_name}} {{item.notifier.last_name}}</h3>
 			    			<h4>{{item.notification_type}} your {{item.notification_media}}</h4>
 			    			<p>{{item.time_of_creation}}</p>

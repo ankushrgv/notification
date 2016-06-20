@@ -20,13 +20,26 @@ class Index(TemplateView):
 		notification_list = models.Notification.objects.order_by('-time_of_creation').filter(notified_user_id=user_id_value)
 		print "notification_list = ", notification_list
 
+		i = 0
+		n = len(notification_list)
+
+		while i < n:
+			if i > (notification_count-1):
+				notification_list[i].status = 1
+				notification_list[i].save()
+			i += 1
+
+
 		context['user_obj'] = user_obj
 		context['notification_count'] = notification_count
 		context['notifications'] = notification_list
 
-		for item in notification_list:
-			item.status = True
-			item.save()
+		item_list = []
+		item_list = notification_list
+
+		# for item in item_list:
+		# 	item.status = True
+		# 	item.save()
 
 		user_obj.new_notification_count = 0
 		user_obj.save()

@@ -1,3 +1,4 @@
+
 body {
     font-family: "Proxima Nova", Helvetica Neue, Helvetica, Arial, sans-serif;
     margin: 0;
@@ -6,11 +7,84 @@ body {
 
 }
 
-/*.body-container{
-    height: 100%;
-    width: 100%;
+.login-page-container{
+	height:100%;
+	width:100%;
+	background-image: url(../../static/bg_images/w1.png);
 }
-*/
+
+.login-container{
+	display: inline-block;
+}
+
+.login-inner{
+    height: 400px;
+    width: 850px;
+    padding-top: 150px;
+    margin-left: 396px;
+}
+
+.first, .second{
+	display: inline-block;
+	font-family: "Oreos";
+	font-size: 90px;
+	margin-bottom: 40px;
+}
+.second{
+	color: #C71660;
+}
+
+form {
+	margin-left: 80px;
+}
+
+input#login-button{
+	height: 40px;
+	width:350px;
+	margin-top: 5px;
+	background-color: #B3ADAD;
+	border: none;
+	border-radius: 6px;
+}
+
+.label-container{
+	/*display: inline-block;*/
+	width: 120px;
+	height: 30px;
+}
+
+.row{
+	margin-bottom: 12px;
+}
+
+.value-container{
+	/*display: inline-block;*/
+	width: 350px;
+}
+
+.value-container input{
+	height: 40px;
+	width: 350px;
+	padding-left: 12px;
+}
+
+.login-error{
+	display: inline-block;
+	width: 300px;
+	padding-top: 0px;
+	margin-left: 40px;
+}
+
+.login-error p{
+	margin-bottom: 60px;
+	margin-top: 15px;
+}
+
+
+.main-container{
+	height: 100%;
+	width: 100%;
+}
 .header{
 	background-color: #000000;
 	color: #ffffff;
@@ -33,7 +107,8 @@ body {
 
 .content{
 	width:100%;
-	height:50%;
+	height:89%;
+	background-image: url(../../static/bg_images/w4.png);
 }
 
 .content .container {
@@ -43,14 +118,32 @@ body {
 	display: inline-block;
 }
 
+.home-container{
+	text-align: center;
+	color: #ffffff;
+}
+
+.home-container h3{
+	font-family: "Alegreya Sans SC";
+	font-size: 30px;
+	display: inline-block;
+}
+
+.home-container h4{
+	font-family: "Alegreya Sans SC";
+	font-size: 90px;
+	display: inline-block;
+	margin-left: 40px;
+	margin-top: 100px;
+}
+
 .arrow{
-	float: right;
+	/*float: right;*/
 	display: inline-block;
     height: 50px;
     width: 50px;
-    margin-right: 344px;
-    margin-top: -18px;
-    /*background-color: #000000;*/
+    margin-left: 160px;
+    margin-top: -200px;
 }
 
 .notifications{
@@ -112,14 +205,14 @@ body {
     width:40%;
     position: fixed;
     z-index: 1;
-    right: 0;
+    /*right: 0;*/
+    margin-left: 700px;
     top: 0;
     background-color: rgba(0,0,0, 0.9);
     background-color: #ADADAD;
     overflow: hidden;
     transition: 0.5s;
     border-radius: 15px;
-    /*box-shadow: 10px 10px 5px 10px #ffffff;*/
 }
 
 .notification-container:hover {
@@ -133,6 +226,15 @@ body {
 	width: 430px;
 	text-align: left;
 }
+
+.notification-container li#read{
+	color: #595959;
+}
+
+.notification-container li#unread{
+	color: #000000;
+}
+
 
 .notification-container h3, h4{
 	display: inline-block;

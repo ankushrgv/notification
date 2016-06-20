@@ -1,27 +1,52 @@
 {% extends 'layout/single_form_layout.html' %}
+{% load static from staticfiles %}
 
-{% block layout %}
+{% block login_layout %}
 {{ block.super }}
-<div class="container">
-    <div class="form centered">
-        <form role="form" method="POST">
-            {% csrf_token %}
-            <div class="row">
-                <div class="twelve columns">
-                    <label for="id_username">Username</label>
-                    <input id="id_username" type="text" name="username" class="u-full-width" />
+<div class="login-page-container">
+    <div class="login-inner">
+        <div class="container sfl">
+            <div class="first">Wingi</div>
+            <div class="second">fy</div>
+        </div>
+        <div class="login-container">
+            <form role="form" method="POST">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="label-container">
+                        <label for="id_username">Username</label>
+                    </div>
+                    <div class="value-container">
+                        <input id="id_username" type="text" name="username"/>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="twelve columns">
-                    <label for="id_password">Password</label>
-                    <input id="id_password" type="password" name="password" class="u-full-width" />
+                <div class="row">
+                    <div class="label-container">
+                        <label for="id_password">Password</label>
+                    </div>
+                    <div class="value-container">
+                        <input id="id_password" type="password" name="password" />
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <input class="button-primary u-full-width" type="submit" value="Login">
-            </div>
-        </form>
+                <div class="row">
+                    <input class="login-button" id="login-button" type="submit" value="Login">
+                </div>
+            </form>
+        </div>
+
+        {% block notifications %}
+            {% if form.errors %}
+                <div class="login-error">
+                    {% for field in form %}
+                        {% if field.errors %}
+                            <p><strong>{{ field.name|title }}:</strong> {{ field.errors.0 }}</p>
+                        {% endif %}
+                     {% endfor %}
+                     <p class="non-field">{{ form.non_field_errors.0 }}</p>
+                </div>
+            {% endif %}
+        {% endblock notifications %}
+    
     </div>
 </div>
-{% endblock layout %}
+{% endblock login_layout %}

@@ -15,17 +15,11 @@ $(document).on('ready', function(){
         closeNav();
     });
 
-    // elem_list = document.querySelectorAll(".notification-container, .notify");
-    // console.log(elem_list);
-
 	$(document).not(document.querySelectorAll(".notification-container, .notify")).on('click', function(event){
         console.log("outside notification container clicked");
-        // $this = $(this);
         $(document).find('.active-bell').removeClass('active-bell');
         closeNav();
     });
-
-
 
     $('.notification-container').click(function(event){
     	event.stopPropagation();

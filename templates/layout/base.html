@@ -9,16 +9,18 @@
         <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
     </head>
-    <body background="{% static 'bg_images/w4.png' %}">
+    <body>
         <div class="body-container">
             {% block header %}
             {% endblock header %}
 
-            {% block notifications %}
-            {% endblock notifications %}
-
             {% block layout %}
             {% endblock layout %}
+
         </div>
+
+        {% block login_layout %}
+        {% endblock login_layout %}
+    
     </body>
 </html>
