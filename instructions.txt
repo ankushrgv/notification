@@ -1,0 +1,120 @@
+
+###############  SETUP  ###############
+
+1. Create a new directory say 'assignment' in your home directory by typing the following command
+	on terminal:
+	-> mkdir assignment
+
+2. Create a virtual environment in your assignment directory by typing the following command on terminal
+	-> cd assignment/
+	-> virtualenv name_of_virtualenv  (let us assume it to be v_wingify)
+
+3. Activate your virtualenv by typing following command
+	-> source v_wingify/bin/activate
+
+4. Clone the repository in your assignment directory from github by typing the below command:
+	-> git clone https://github.com/ankushrgv/notification
+
+5. Install the dependencies in your virtual environment by typing the following command
+	-> cd notification/
+	-> pip install -r "requirements.txt"
+
+	(Make sure you have "pip" already installed on your system)
+
+6. Now delete all the files in "notification/apps/notifications/migrations"  except __init__.py
+
+7. Now open a new terminal tab and open mysql in it by typing:
+	-> mysql -u root -p
+	enter the password for your MYSQL for 'root' user
+	-> create database wingify;
+
+8. Now come back to the original terminal tab and in the notification directory type:
+	-> python manage.py makemigrations
+	-> python manage.py migrate
+	-> python manage.py runserver
+
+	NOTE - By default, the port is 8000, so if it is already being used by some other application, then you
+	may type:
+	-> python manage.py runserver 9000(or any other port that is not being used)
+
+Your server should be up and running.
+
+9. Go to web browser and in the address bar type "localhost:8000"
+	Hopefully it will show the login page to the site.
+
+10. Now as there are no users created, you can't acces the site.
+
+11. So to create users, you need to first creat a superuser so that you can access the Djnago-Admin.
+
+12. Go back to the original terminal.
+
+13. Press Cntrl + C to stop the server.
+
+14. Now create super user by typing:
+	-> python manage.py createsuperuser
+	Follow the instructions
+
+15. Once the superuser is created successfully, type:
+	-> -> python manage.py runserver
+
+16. Open your browser and type "localhost:8000/admin"
+
+17. Login using your superuser username and password
+
+18. Now create 5 to 10 users from the create user button on the dashboard.
+	a) Make sure to not leave the first_name and last_name field empty while creating the user.
+	b) Also make sure to uncheck the "is_staff" check box, if it is not uncheked already(if you don't want 
+		that user to access admin site)
+	c) "is_active" check-box should be checked by default. Check it, if not already.
+
+19. Once you are done with creating 5 to 10 users, then you can login from them and see the status of each
+	and everyone's notifications. It should be zero.
+
+	**NOTE**
+	More the number of users, more will be the variation in notifications as users are also picked at random while creating notifications asynchronously.
+
+20. Now open another terminal and type:
+	-> celery -A config worker -B
+
+	The above is an important step. This will start celery and now the celery worker is ready to recieve a task to
+	execute it asynchronously in the background
+	If celery started successfully, it should show
+	"celery@PCname ready"
+
+21. Now that celery's worker is ready to recieve the task to be performed, we need to feed it the task.
+	So, open another terminal and type:
+	-> -> python manage.py shell
+
+22. When shell opens, type the following commands:
+	-> from apps.notifications import tasks
+	-> tasks.CreateNotifications.apply_async()
+
+	as soon as you hit enter after typing the last command, switch to the terminal tab in which celery was running.
+	If everything went right, something like this will be displayed:
+
+	[2016-06-20 06:08:19,204: WARNING/Worker-4] delay =
+	[2016-06-20 06:08:19,204: WARNING/Worker-4] 2016-06-20 22:38:24.203908
+
+	the last value being the time for execution of the same task, but in UTC and not accordind to Indian Standard Timings(as there some issue with Celery timing standards)
+
+	So add 5 hours 30 minutes to that time (say it is 't')
+	So now the next notification will be created at time = 't' and another entry will be displayed with some random time like the above
+	** Notice the time of the new entry will vary 45 seconds to 75 seconds from the current entry as that has been set in the code in the file tasks.py in the directory notification/apps/notifications/.
+	You can change those values as per your convenience.
+
+
+23. Now you can switch to your browser and check the features of the web app while the notifications are being generated
+	asynchronously in the backend using CELERY.
+
+24. If you want to kill the process of creation of notifications, simply stop the Worker in the terminal in which celery
+	running by hitting Cntrl + C  and can start it again by typing celery -A config worker -B
+
+	NOTE**  As the task of creating notifications keeps on creating new tasks of its kind, there will exist some task in the
+			task-QUEUE of celery.
+			So you can clear the queue by typing:
+			-> celery purge
+			-> yes
+
+Make sure to install the below fonts in the fonts folder in static directory for a better UI:
+	1) Oreos
+	2) Alegreya Sans SC
