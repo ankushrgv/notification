@@ -22,18 +22,25 @@ $(document).on('ready', function(){
     socket.on('message', function(message) {
         var message_json = jQuery.parseJSON(message);
 
-        // $("#unread_count").text(message_json.unread_count);
+        $('.count').each(function() {
+            $this = $(this);
+            $this.html("");
+            var count_value = $this.data("count");
+            
+            console.log("cv", count_value);
 
-        // if ("mark_as_read" in message_json) {
-        //     $("#notifications-table tbody").empty();
-        // } else {
+            count_value = count_value + 1;
+            $this.append($("<strong>").text(count_value));
+            $this.data("count", count_value);
+            console.log("updated cv", count_value);
+        });
 
-        // $container = $('.notifications-items');
+        $('.count').show();
 
         var f = document.createDocumentFragment();
 
         var l = document.createElement('li');
-        $(l).attr('id', 'unread');
+        $(l).attr('class', 'unread');
 
         $(l).append($("<h3>").text(message_json.actor));
         // $(l).append($("<h3>").text("  "));
@@ -66,6 +73,7 @@ $(document).on('ready', function(){
         console.log("outside notification container clicked");
         $(document).find('.active-bell').removeClass('active-bell');
         closeNav();
+        // make_read();
     });
 
     $('.notification-container').click(function(event){
@@ -78,7 +86,18 @@ function openNav() {
 	$('#count').hide();
 	$('#arrow').show();
     document.getElementById("myNav").style.height = "50%";
-    
+    $('.count').each(function() {
+        $this = $(this);
+        $this.html("");
+        var count_value = $this.data("count");
+        
+        console.log("cv in openNav", count_value);
+
+        count_value = 0;
+        $this.append($("<strong>").text(count_value));
+        $this.data("count", count_value);
+        console.log("updated cv in openNav", count_value);
+    });
 }
 
 function closeNav() {
@@ -86,5 +105,16 @@ function closeNav() {
 	setTimeout(
 		function(){
     		$('#arrow').hide();
+            $('.unread').each(function() {
+                $this = $(this);
+                $this.removeClass('unread').addClass('read');
+            });
 		}, 350);
+}
+
+function make_read(){
+    jQuery('.unread').each(function() {
+            $this = $(this);
+            $this.removeClass('unread').addClass('read');
+        });
 }

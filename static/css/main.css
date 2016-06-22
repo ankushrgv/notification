@@ -227,11 +227,11 @@ input#login-button{
 	text-align: left;
 }
 
-.notification-container li#read{
+.notification-container li.read{
 	color: #595959;
 }
 
-.notification-container li#unread{
+.notification-container li.unread{
 	color: #000000;
 }
 

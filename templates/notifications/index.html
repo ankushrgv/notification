@@ -27,9 +27,9 @@
 			    <ul class="notifications-items">
 			    	{% for item in notifications%}
 			    		{% if item.status == 0 %}
-			    			<li id="read">
+			    			<li class="read">
 			    		{% else %}
-				    		<li id="read">
+				    		<li class="read">
 			    		{% endif %}
 			    			<h3>{{item.notifier.first_name}} {{item.notifier.last_name}}</h3>
 			    			<h4>{{item.notification_type}} your {{item.notification_media}}</h4>

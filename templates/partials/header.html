@@ -12,7 +12,7 @@
                         <img src="{% static 'images/notification_bell.png' %}" heigh="40px" width="40px"></img>
                     </div>
                     {% if notification_count != 0 %}
-                        <div class="count" id="count">
+                        <div class="count" id="count" data-count="{{notification_count}}">
                             <strong>{{notification_count}}</strong>
                         </div>
                     {% endif %}                    
