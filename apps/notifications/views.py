@@ -5,6 +5,7 @@ from django.views.generic.base import TemplateView
 
 from apps.notifications import models
 
+import datetime
 import json
 import redis
 
@@ -63,17 +64,24 @@ def on_notification_post_save(sender, created, **kwargs):
 		print "Recipient: %s" % recipient.id
 
 		# for session in recipient.session_set.all():
+		datetime.timedelta(0,5,30)
+		t = notification.time_of_creation
+		t = t + datetime.timedelta(hours=5, minutes=30)
+		t = str(t)
+		t = t[:-13]
+
+		notifier_name = notification.notifier.first_name + " " + notification.notifier.last_name
+		print " notifier name = ", notifier_name
+
 		redis_client.publish(
 			'notifications.%s' % recipient.id,
 			json.dumps(
 				dict(
-					# timestamp=notification.time_of_creation,
-					recipient=notification.notified_user.username,
-					actor=notification.notifier.username,
+					timestamp=t,
+					recipient=notification.notified_user.id,
+					actor=notifier_name,
 					verb=notification.notification_type,
 					action_object=notification.notification_media,
-					# target=notification.target,
-					# description=notification.description
 				)
 			)
 		)

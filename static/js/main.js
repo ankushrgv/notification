@@ -22,22 +22,29 @@ $(document).on('ready', function(){
     socket.on('message', function(message) {
         var message_json = jQuery.parseJSON(message);
 
-        $("#unread_count").text(message_json.unread_count);
+        // $("#unread_count").text(message_json.unread_count);
 
         // if ("mark_as_read" in message_json) {
         //     $("#notifications-table tbody").empty();
         // } else {
-            var $tr = $("<tr>");
-            // $tr.append($("<td>").text(message_json.timestamp));
-            $tr.append($("<td>").text(message_json.recipient));
-            $tr.append($("<td>").text(message_json.actor));
-            $tr.append($("<td>").text(message_json.verb));
-            $tr.append($("<td>").text(message_json.action_object));
-            // $tr.append($("<td>").text(message_json.target));
-            // $tr.append($("<td>").text(message_json.description));
 
-            $("#notifications-table tbody").prepend($tr);
-        // }
+        // $container = $('.notifications-items');
+
+        var f = document.createDocumentFragment();
+
+        var l = document.createElement('li');
+        $(l).attr('id', 'unread');
+
+        $(l).append($("<h3>").text(message_json.actor));
+        // $(l).append($("<h3>").text("  "));
+        $(l).append($("<h4>").text(message_json.verb));
+        $(l).append($("<h4>").text("your"));
+        $(l).append($("<h4>").text(message_json.action_object));
+        $(l).append($("<p>").text(message_json.timestamp));
+
+        f.appendChild(l);
+        $('.notifications-items').prepend(f);
+
     });
 
  	$('#arrow').hide();
