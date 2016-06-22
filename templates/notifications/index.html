@@ -14,6 +14,31 @@
 		<div class="home-container">
 			<h3>Welcome</h3> <h4> {{user.first_name}} </h4>
 		</div>
+
+		<table id="notifications-table" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>Recipient</th>
+                        <th>Actor</th>
+                        <th>Verb</th>
+                        <th>Action Object</th>
+                        <th>Target</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for notification in notifications %}
+                    <tr>
+                        {# <td>{{ notification.timestamp|date:"c" }}</td> #}
+                        <td>{{ notification.recipient|default:"" }}</td>
+                        <td>{{ notification.actor|default:"" }}</td>
+                        <td>{{ notification.verb|default:"" }}</td>
+                        <td>{{ notification.action_object|default:"" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
 	</div>
 	<div class="arrow" id="arrow">
 		<img src="{% static 'images/uparrow.png' %}" height="50px" width="50px"></img>

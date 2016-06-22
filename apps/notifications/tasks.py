@@ -13,51 +13,58 @@ import time
 @app.task
 def CreateNotifications():
 
-	upper_limit = models.MyUser.objects.all().aggregate(Max('id'))
-	lower_limit = models.MyUser.objects.all().aggregate(Min('id'))
+	try:
+		upper_limit = models.MyUser.objects.all().aggregate(Max('id'))
+		lower_limit = models.MyUser.objects.all().aggregate(Min('id'))
 
-	## select a user to be notified randomly
+		## select a user to be notified randomly
 
-	to_user = None
-	to = 0
-	
-	while to_user is None:
-		to = random.randint(lower_limit['id__min'], upper_limit['id__max'])
-		try:
-			to_user = models.MyUser.objects.get(id=to)
-		except:
-			pass
+		# to_user = None
+		# to = 0
+		
+		# while to_user is None:
+		# 	to = random.randint(lower_limit['id__min'], upper_limit['id__max'])
+		# 	try:
+		# 		to_user = models.MyUser.objects.get(id=to)
+		# 	except:
+		# 		pass
+		to = 5
+		to_user = models.MyUser.objects.get(pk=to)
 
-	## select a user to be notified from randomly
+		## select a user to be notified from randomly
 
-	frm_user = None
-	frm = to
+		frm_user = None
+		frm = to
 
-	while frm_user is None:
-		while frm == to:
-			frm = random.randint(lower_limit['id__min'], upper_limit['id__max'])
-		try:
-			frm_user = models.MyUser.objects.get(id=frm)
-		except:
-			pass
+		while frm_user is None:
+			while frm == to:
+				frm = random.randint(lower_limit['id__min'], upper_limit['id__max'])
+			try:
+				frm_user = models.MyUser.objects.get(id=frm)
+			except:
+				pass
 
-	notif_type = ['comment on', 'liked', 'shared']
-	notif_media = ['post', 'picture', 'video']
+		notif_type = ['comment on', 'liked', 'shared']
+		notif_media = ['post', 'picture', 'video']
 
-	models.Notification.objects.create(
-		notified_user = to_user,
-		notifier = frm_user,
-		notification_type = random.choice(notif_type),
-		notification_media = random.choice(notif_media))
+		models.Notification.objects.create(
+			notified_user = to_user,
+			notifier = frm_user,
+			notification_type = random.choice(notif_type),
+			notification_media = random.choice(notif_media))
 
-	to_user.new_notification_count += 1
-	to_user.save()
+		to_user.new_notification_count += 1
+		to_user.save()
 
-	## Add delay randomly
+		## Add delay randomly
 
-	delay = datetime.utcnow() + timedelta(seconds=random.randint(5,15))
+		delay = datetime.utcnow() + timedelta(seconds=random.randint(5,15))
 
-	print "delay = ", delay
-	## call the same function asynchronously adding the delay
-	
-	CreateNotifications.apply_async(eta=delay)
+		print "delay = ", delay
+		## call the same function asynchronously adding the delay
+		
+		CreateNotifications.apply_async(eta=delay)
+		return True
+
+	except Exception as err:
+		print str(err)

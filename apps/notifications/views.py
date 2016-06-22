@@ -1,7 +1,12 @@
 
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.views.generic.base import TemplateView
 
 from apps.notifications import models
+
+import json
+import redis
 
 class Index(TemplateView):
 
@@ -18,7 +23,7 @@ class Index(TemplateView):
 
 
 		notification_list = models.Notification.objects.order_by('-time_of_creation').filter(notified_user_id=user_id_value)
-		print "notification_list = ", notification_list
+		# print "notification_list = ", notification_list
 
 		i = 0
 		n = len(notification_list)
@@ -34,14 +39,41 @@ class Index(TemplateView):
 		context['notification_count'] = notification_count
 		context['notifications'] = notification_list
 
-		item_list = []
-		item_list = notification_list
+		# item_list = []
+		# item_list = notification_list
 
 		# for item in item_list:
-		# 	item.status = True
-		# 	item.save()
+		#   item.status = True
+		#   item.save()
 
-		user_obj.new_notification_count = 0
-		user_obj.save()
+		# user_obj.new_notification_count = 0
+		# user_obj.save()
 
 		return context
+
+
+@receiver(post_save, sender=models.Notification)
+def on_notification_post_save(sender, created, **kwargs):
+	print "post save signal triggered"
+	if created:
+		print "New notification created (post save)"
+		redis_client = redis.StrictRedis(host='localhost', port=6379, db=0)
+		notification = kwargs['instance']
+		recipient = notification.notified_user
+		print "Recipient: %s" % recipient.id
+
+		# for session in recipient.session_set.all():
+		redis_client.publish(
+			'notifications.%s' % recipient.id,
+			json.dumps(
+				dict(
+					# timestamp=notification.time_of_creation,
+					recipient=notification.notified_user.username,
+					actor=notification.notifier.username,
+					verb=notification.notification_type,
+					action_object=notification.notification_media,
+					# target=notification.target,
+					# description=notification.description
+				)
+			)
+		)

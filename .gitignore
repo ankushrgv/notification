@@ -73,3 +73,5 @@ db.*
 celerybeat.pid
 celerybeat-schedule.db
 celerybeat-schedule
+
+node_modules/
