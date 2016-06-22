@@ -1,6 +1,7 @@
 
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.http import HttpResponse
 from django.views.generic.base import TemplateView
 
 from apps.notifications import models
@@ -24,17 +25,33 @@ class Index(TemplateView):
 
 
 		notification_list = models.Notification.objects.order_by('-time_of_creation').filter(notified_user_id=user_id_value)
+
+		# if user_obj.box_status == 1:
+		# 	print " inside box open "
+		# 	for item in notification_list:
+		# 		if item.status == 0:
+		# 			item.status = 1
+		# 			item.save()
+
+		# 	user_obj.box_status = 0
+		# 	user_obj.new_notification_count = 0
+		# 	user_obj.save()
+
+		# 	notification_count = 0
+
+
 		# print "notification_list = ", notification_list
 
-		i = 0
-		n = len(notification_list)
+		# i = 0
+		# n = len(notification_list)
 
-		while i < n:
-			if i > (notification_count-1):
-				notification_list[i].status = 1
-				notification_list[i].save()
-			i += 1
+		# while i < n:
+		# 	if i > (notification_count-1):
+		# 		notification_list[i].status = 1
+		# 		notification_list[i].save()
+		# 	i += 1
 
+		print "notification_count = ", notification_count
 
 		context['user_obj'] = user_obj
 		context['notification_count'] = notification_count
@@ -82,6 +99,87 @@ def on_notification_post_save(sender, created, **kwargs):
 					actor=notifier_name,
 					verb=notification.notification_type,
 					action_object=notification.notification_media,
+					notification_id=notification.id 
 				)
 			)
 		)
+
+
+def notification_form_submit(request):
+	
+	if request.method == 'POST':
+
+		content = request.POST
+		print content
+
+		myDict = dict(content.iterlists())
+
+		user_id = myDict['user_id']
+		# box_status = myDict['box_status']
+
+		user_obj = models.MyUser.objects.get(id=int(user_id[0]))
+		
+		# if box_status[0] == 'open':
+		# 	print "box is open1"
+		# 	user_obj.box_status = 1
+		# else:
+		# 	print "box is close1"
+		# 	user_obj.box_status = 0
+
+		# user_obj.save()
+
+		unread_list = []
+
+		try:
+			unread_list = myDict['notific_id']
+			print "try"
+		except:
+			print "except"
+			pass
+
+		if unread_list:
+			print "if"
+			for item in unread_list:
+				print "item = ", item
+				obj = models.Notification.objects.get(id=int(item))
+				obj.status = 1
+				obj.save()
+
+			user_obj.new_notification_count = 0
+			user_obj.save()
+
+		return HttpResponse(
+			 json.dumps({'status': 'True'})
+		)
+
+	else:
+		return HttpResponse(
+			json.dumps({"nothing to see": "this isn't happening"})
+		)
+
+
+# def box_status_form_submit(request):
+	
+# 	if request.method == 'POST':
+
+# 		content = request.POST
+# 		print content
+
+# 		user_id = []
+
+# 		user_id= content['user_id']
+		
+# 		user_obj = models.MyUser.objects.get(id=int(user_id[0]))
+# 		user_obj.box_status = 0
+# 		user_obj.save()
+
+# 		print "box status = ", user_obj.box_status
+
+# 		return HttpResponse(
+# 			 json.dumps({'status': 'True'})
+# 		)
+
+# 	else:
+# 		return HttpResponse(
+# 			json.dumps({"nothing to see": "this isn't happening"})
+# 		)
