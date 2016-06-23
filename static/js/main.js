@@ -21,8 +21,6 @@ $(document).on('ready', function(){
 
     $('.count').each(function() {
         $this = $(this);
-        // $this.html("");
-        // var count_value = $this.data("count");
         if ($this.data("count") > 0){
             $('.count').show();
         }
@@ -36,14 +34,26 @@ $(document).on('ready', function(){
         $('.count').each(function() {
             $this = $(this);
             $this.html("");
-            var count_value = $this.data("count");
-            
-            // console.log("cv", count_value);
 
+            var count_value = $this.data("count");
             count_value = count_value + 1;
+            
             $this.append($("<strong>").text(count_value));
             $this.data("count", count_value);
-            // console.log("updated cv", count_value);
+
+            $('.notification-heading').each(function() {
+                $this = $(this);
+                $this.html("");
+                
+                var head_count_val = $this.data("noti-count");
+                console.log(" head count val = ", head_count_val);
+                head_count_val = head_count_val + 1;
+
+                $this.append($("<h2>").text("Notifications"));
+                $this.append($("<h3>").text(head_count_val));
+                $this.data("noti-count", head_count_val);
+            });            
+            
         });
 
         $('.count').show();
@@ -78,18 +88,12 @@ $(document).on('ready', function(){
  	$('#arrow').hide();
 
     $(document).on('click','.notify', function(event){
-        // alert("clicked");
+
         event.stopPropagation();
         $this = $(this);
         $this.addClass('active-bell');
         $('#notif-box-status').val('open');
         $this.removeClass('notify');
-
-        // $('.active-bell').each(function() {
-        //     $this = $(this);
-        //     status = $this.data('status');
-        //     $this.data("status", "open");
-        // });
 
         openNav();
     });
@@ -100,14 +104,7 @@ $(document).on('ready', function(){
         $('#notif-box-status').val('close');
         $this.removeClass('active-bell');
 
-        // $('.notify').each(function() {
-        //     $this = $(this);
-        //     status = $this.data('status');
-        //     $this.data("status", "close");
-        // });
-
         closeNav();
-        // box_status_form_submit();
     });
 
 	$(document).not(document.querySelectorAll(".notification-container, .bell")).on('click', function(event){
@@ -169,13 +166,8 @@ function openNav() {
         count_value = 0;
         $this.append($("<strong>").text(count_value));
         $this.data("count", count_value);
-    });
 
-    // $('.bell').each(function() {
-    //     $this = $(this);
-    //     status = $this.data('status');
-    //     $this.data("status", "open");
-    // });
+    });
 
     notification_form_submit();
 }
@@ -191,6 +183,14 @@ function closeNav() {
         count_value = 0;
         $this.append($("<strong>").text(count_value));
         $this.data("count", count_value);
+
+        $('.notification-heading').each(function() {
+            $this = $(this);
+            $this.html("");
+            $this.data("noti-count", count_value);            
+            $this.append($("<h2>").text("Notifications"));
+            $this.append($("<h3>").text(count_value));
+        }); 
     });
 
 	document.getElementById("myNav").style.height = "0%";
@@ -203,18 +203,12 @@ function closeNav() {
             });
 		}, 350);
 
-    // $('.bell').each(function() {
-    //     $this = $(this);
-    //     status = $this.data('status');
-    //     $this.data("status", "close");
-    // });
     notification_form_submit();
 }
 
 
 function notification_form_submit() {
-    // console.log("notification form submit is working!") // sanity check
-
+    
     $.ajax({
            type: "POST",
            url: "/notification_form_submit/",
@@ -226,18 +220,3 @@ function notification_form_submit() {
            }
     });
 }
-
-// function box_status_form_submit() {
-
-//     $.ajax({
-//            type: "POST",
-//            url: "/box_status_form_submit/",
-//            data: $("#box-status-form").serialize(), // serializes the form's elements.
-//            // dataType: 'json',
-
-//            success: function(data){ 
-//                 console.log("success!!");
-//            }
-//     });
-
-// }
