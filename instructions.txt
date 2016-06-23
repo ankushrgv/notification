@@ -1,7 +1,71 @@
 
 ###############  SETUP  ###############
 
-1. Create a new directory say 'assignment' in your home directory by typing the following command
+Install the following necessary Ubuntu packages to trun the app.  
+
+	$ sudo apt-get install curl python-software-properties g++ make
+	$ sudo apt-get install python python-virtualenv
+	$ sudo apt-get install redis-server
+	$ sudo add-apt-repository ppa:chris-lea/node.js
+	$ sudo add-apt-repository ppa:nginx/stable
+	$ sudo apt-get update
+	$ sudo apt-get install nodejs nginx
+
+
+Install NodeJS modeules
+
+	$ curl https://www.npmjs.org/install.sh | sudo sh
+	$ sudo npm install socket.io@0.9.17                     ## Make sure the version is 0.9.17
+	$ sudo npm install -g cookie
+
+
+Now configure your Nginx by :
+
+	-> cd /etc/nginx/sites-available/
+	-> vim deafult 
+	(make sure you have vim installed)
+
+	Now paste the following configuration in this file:
+
+
+
+	map $http_upgrade $connection_upgrade {
+    default upgrade;
+    ''      close;
+	}
+
+	server {
+	    listen   80;
+	    #listen   [::]:80 default_server ipv6only=on; ## listen for ipv6
+
+	    # Make site accessible from http://localhost/
+	    server_name 'localhost';
+
+	    location / {
+	        proxy_set_header X-Forwarded-Host $host;
+	        proxy_set_header X-Forwarded-Server $host;
+	        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+	        proxy_set_header Host 'localhost';
+	        proxy_pass http://127.0.0.1:8000;
+	    }
+
+	    location /socket.io {
+	        proxy_set_header X-Forwarded-Host $host;
+	        proxy_set_header X-Forwarded-Server $host;
+	        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+	        proxy_set_header Host 'localhost';
+	        proxy_pass http://127.0.0.1:8002;
+	        proxy_http_version 1.1;
+	        proxy_set_header Upgrade $http_upgrade;
+	        proxy_set_header Connection $connection_upgrade;
+	    }
+	}
+
+
+
+
+
+1. Now, create a new directory say 'assignment' in your home directory by typing the following command
 	on terminal:
 	-> mkdir assignment
 
@@ -21,32 +85,36 @@
 
 	(Make sure you have "pip" already installed on your system)
 
+
 6. Now delete all the files in "notification/apps/notifications/migrations"  except __init__.py
 
-7. Now open a new terminal tab and open mysql in it by typing:
+7. Now open a new terminal tab (we will call it "terminal_tab_2") and open mysql in it by typing:
 	-> mysql -u root -p
 	enter the password for your MYSQL for 'root' user
 	-> create database wingify;
 
-8. Now come back to the original terminal tab and in the notification directory type:
+8. Now come back to the original terminal tab ("terminal_tab_1") and in the notification directory type:
 	-> python manage.py makemigrations
 	-> python manage.py migrate
 	-> python manage.py runserver
 
 	NOTE - By default, the port is 8000, so if it is already being used by some other application, then you
 	may type:
-	-> python manage.py runserver 9000(or any other port that is not being used)
+	-> python manage.py runserver 9000(or any other port that is not being used, but make sure to change the value of the same in NGINX 'defaults' file in the /etc/nginx/sites-available/ directory)
+
 
 Your server should be up and running.
 
-9. Go to web browser and in the address bar type "localhost:8000"
+
+
+9. Go to web browser(for best USER experience, use FIREFOX Web Browser) and in the address bar type "localhost:8000"
 	Hopefully it will show the login page to the site.
 
 10. Now as there are no users created, you can't acces the site.
 
 11. So to create users, you need to first creat a superuser so that you can access the Djnago-Admin.
 
-12. Go back to the original terminal.
+12. Go back to the "terminal_tab_1".
 
 13. Press Cntrl + C to stop the server.
 
@@ -55,7 +123,7 @@ Your server should be up and running.
 	Follow the instructions
 
 15. Once the superuser is created successfully, type:
-	-> -> python manage.py runserver
+	-> python manage.py runserver
 
 16. Open your browser and type "localhost:8000/admin"
 
@@ -73,40 +141,111 @@ Your server should be up and running.
 	**NOTE**
 	More the number of users, more will be the variation in notifications as users are also picked at random while creating notifications asynchronously.
 
-20. Now open another terminal and type:
-	-> celery -A config worker -B
+20. Now open a new terminal ("terminal_tab_3")
+	a) go to the root directory of your project.
+	b) activate your virtual environement.
+	c) start your nodejs server on which socket.io will run by typing the following command:
+
+		-> node nodejs/notifications.js
+
+		(make sure you are in the 'assignment/notification/' directory)
+
+		if the server starts succesfully, it should display the below message:
+
+		"info  - socket.io started"
+
+
+21. Now that both your Nodejs server and your local developement server(python-django server) are up and running,
+	you need to start NGINX to NodeJs and Python-Django server communicate with each other as we need to update the notifications real-time without page refresh/reload.
+
+	So for that, open another terminal ("terminal_tab_4") and start nginx by typing:
+
+	-> sudo service nginx restart
+
+	if nginx started succesfully, then the below message will be displayed:
+		"nginx stop/waiting"
+		"nginx start/running, process xxxxx"
+
+
+22. So now that both your servers are ready to communicate with each other, all we need to do now is to create 
+	notifications between random users at random interval of time.
+
+	So for that we'll be using CELERY which will run a task of creating notifications at random interval of time.
+
+
+23. Now open another terminal ("terminal_tab_5")and type:
+	-> celery -A config worker -l info
 
 	The above is an important step. This will start celery and now the celery worker is ready to recieve a task to
 	execute it asynchronously in the background
 	If celery started successfully, it should show
 	"celery@PCname ready"
 
-21. Now that celery's worker is ready to recieve the task to be performed, we need to feed it the task.
-	So, open another terminal and type:
-	-> -> python manage.py shell
 
-22. When shell opens, type the following commands:
+24. Now that celery's worker is ready to recieve the task to be performed, we need to feed it the task.
+	So, open another terminal ("terminal_tab_6") and type:
+	-> python manage.py shell
+
+
+25. When shell opens, type the following commands:
 	-> from apps.notifications import tasks
 	-> tasks.CreateNotifications.apply_async()
 
-	as soon as you hit enter after typing the last command, switch to the terminal tab in which celery was running.
+
+	as soon as you hit enter after typing the last command, switch to the "terminal_tab_5" (in which celery was running).
 	If everything went right, something like this will be displayed:
 
-	[2016-06-20 06:08:19,204: WARNING/Worker-4] delay =
-	[2016-06-20 06:08:19,204: WARNING/Worker-4] 2016-06-20 22:38:24.203908
 
-	the last value being the time for execution of the same task, but in UTC and not accordind to Indian Standard Timings(as there some issue with Celery timing standards)
+	[2016-06-23 13:39:59,588: INFO/MainProcess] Received task: apps.notifications.tasks.CreateNotifications[534d7769-16ba-46e5-8c09-d62abf4f4475] eta:[2016-06-23 08:05:37.456782+00:00]
+
+	The above info tells us that the task has been received by Celery Worker.
+	Now some more info will be printed. Like this:
+
+	[2016-06-23 13:39:59,677: WARNING/Worker-2] Recipient: 5
+	[2016-06-23 13:39:59,678: WARNING/Worker-2] notifier name =
+	[2016-06-23 13:39:59,678: WARNING/Worker-2] Some Name
+	[2016-06-23 13:39:59,739: WARNING/Worker-2] delay =
+	[2016-06-23 13:39:59,739: WARNING/Worker-2] 2016-06-23 08:10:04.739418
+	[2016-06-23 13:39:59,751: INFO/MainProcess] Task apps.notifications.tasks.CreateNotifications[534d7769-16ba-46e5-8c09-d62abf4f4475] succeeded in 0.162102752016s: True
+
+	The above is printed so as to monitor which user_id is the notification being created for and by whom with what delay time.
+
+	In case no user has logged in, only the below will be displayed:
+
+	[2016-06-23 13:39:59,677: WARNING/Worker-2] Recipient: 5
+	[2016-06-23 13:39:59,739: WARNING/Worker-2] delay =
+	[2016-06-23 13:39:59,739: WARNING/Worker-2] 2016-06-23 08:10:04.739418
+	[2016-06-23 13:39:59,751: INFO/MainProcess] Task apps.notifications.tasks.CreateNotifications[534d7769-16ba-46e5-8c09-d62abf4f4475] succeeded in 0.162102752016s: True	
+
+
+	the delay value being the time for execution of the same task, but in UTC and not accordind to Indian Standard Timings(as there some issue with Celery timing standards)
+
 
 	So add 5 hours 30 minutes to that time (say it is 't')
 	So now the next notification will be created at time = 't' and another entry will be displayed with some random time like the above
-	** Notice the time of the new entry will vary 45 seconds to 75 seconds from the current entry as that has been set in the code in the file tasks.py in the directory notification/apps/notifications/.
+	** Notice the time of the new entry will vary 5 seconds to 15 seconds from the current entry as that has been set in the code in the file tasks.py in the directory notification/apps/notifications/.
 	You can change those values as per your convenience.
 
 
-23. Now you can switch to your browser and check the features of the web app while the notifications are being generated
-	asynchronously in the backend using CELERY.
+26. Now switch to your browser and type:
+	
+	localhost
 
-24. If you want to kill the process of creation of notifications, simply stop the Worker in the terminal in which celery
+	NOTE: You dont have to type localhost:8000 as that will run the python-django server hosted app and not the NGINX one.
+
+	
+	Everything should be up and working.
+	
+	You can now login with any of the user's login credentials(which you created from Django-Admin)
+	
+	Check the features of the web app while the notifications are being generated asynchronously in the backend using CELERY.
+
+
+27. You can open a Private Browsing Tab in Mozilla (Cntrl+Shift+P), and login as another user so as to view that multiple
+	users are getting the real time notifications. 
+
+
+24. If you want to kill the process of creation of notifications, simply stop the Worker in the terminal in which celery is
 	running by hitting Cntrl + C  and can start it again by typing celery -A config worker -B
 
 	NOTE**  As the task of creating notifications keeps on creating new tasks of its kind, there will exist some task in the
@@ -114,6 +253,7 @@ Your server should be up and running.
 			So you can clear the queue by typing:
 			-> celery purge
 			-> yes
+
 
 Make sure to install the below fonts in the fonts folder in static directory for a better UI:
 	1) Oreos
