@@ -7,7 +7,7 @@
                 <h2> Wingify </h2>
             </div>
             <div class="notifications">
-                <a class="notify" data-status="close" href="#">
+                <a class="notify bell" data-status="close" href="#">
                     <div class="notification-bell">
                         <img src="{% static 'images/notification_bell.png' %}" heigh="40px" width="40px"></img>
                     </div>
@@ -22,7 +22,7 @@
                                     <input type="hidden" name="notific_id" value="{{ item.id }}">
                                 {% endif %}
                             {% endfor %}
-<!--                            <input type="hidden" id="notif-box-status" name="box_status" value="close">    -->
+                            <input type="hidden" id="notif-box-status" name="box_status" value="close">
 
                     </form> 
 <!--                    <form class="box-status-form" id="box-status-form" method="POST" action="">

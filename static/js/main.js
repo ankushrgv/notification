@@ -82,33 +82,52 @@ $(document).on('ready', function(){
         event.stopPropagation();
         $this = $(this);
         $this.addClass('active-bell');
-        // $('#notif-box-status').val('open');
+        $('#notif-box-status').val('open');
+        $this.removeClass('notify');
+
+        // $('.active-bell').each(function() {
+        //     $this = $(this);
+        //     status = $this.data('status');
+        //     $this.data("status", "open");
+        // });
+
         openNav();
     });
 
     $(document).on('click','.active-bell', function(event){
         $this = $(this);
+        $this.addClass('notify');
+        $('#notif-box-status').val('close');
         $this.removeClass('active-bell');
 
-        // $('#notif-box-status').val('close');
+        // $('.notify').each(function() {
+        //     $this = $(this);
+        //     status = $this.data('status');
+        //     $this.data("status", "close");
+        // });
+
         closeNav();
         // box_status_form_submit();
     });
 
-	$(document).not(document.querySelectorAll(".notification-container, .notify")).on('click', function(event){
+	$(document).not(document.querySelectorAll(".notification-container, .bell")).on('click', function(event){
+
+        console.log("clicked outside anywhere");
 
         var status = "close";
 
-        $('.notify').each(function() {
+        $('#notif-box-status').each(function() {
             $this = $(this);
-            status = $this.data('status');
+            status = $this.val();
         });
 
+        console.log("status = ", status);
+
         if (status == "open"){ 
-            $(document).find('.active-bell').removeClass('active-bell');
+            $('#notif-box-status').val('close');
             closeNav();
-            // $('#notif-box-status').val('close');
-            notification_form_submit();
+            $(document).find('.bell').removeClass('active-bell');
+            $(document).find('.bell').addClass('notify');
         }
     });
 
@@ -120,13 +139,15 @@ $(document).on('ready', function(){
 
         var status = "close";
 
-        $('.notify').each(function() {
+        $('#notif-box-status').each(function() {
             $this = $(this);
-            status = $this.data('status');
+            status = $this.val();
         });
 
+        console.log("status = ", status);
+
         if (status == "open"){
-            // $('#notif-box-status').val('close');
+            $('#notif-box-status').val('close');
             notification_form_submit();
         }
     });
@@ -150,11 +171,11 @@ function openNav() {
         $this.data("count", count_value);
     });
 
-    $('.notify').each(function() {
-        $this = $(this);
-        status = $this.data('status');
-        $this.data("status", "open");
-    });
+    // $('.bell').each(function() {
+    //     $this = $(this);
+    //     status = $this.data('status');
+    //     $this.data("status", "open");
+    // });
 
     notification_form_submit();
 }
@@ -171,7 +192,7 @@ function closeNav() {
         $this.append($("<strong>").text(count_value));
         $this.data("count", count_value);
     });
-    
+
 	document.getElementById("myNav").style.height = "0%";
 	setTimeout(
 		function(){
@@ -182,13 +203,12 @@ function closeNav() {
             });
 		}, 350);
 
-    $('.notify').each(function() {
-        $this = $(this);
-        status = $this.data('status');
-        // console.log(status);
-        $this.data("status", "close");
-    });
-    // box_status_form_submit();
+    // $('.bell').each(function() {
+    //     $this = $(this);
+    //     status = $this.data('status');
+    //     $this.data("status", "close");
+    // });
+    notification_form_submit();
 }
 
 

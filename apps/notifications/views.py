@@ -27,46 +27,24 @@ class Index(TemplateView):
 
 		notification_list = models.Notification.objects.order_by('-time_of_creation').filter(notified_user_id=user_id_value)
 
-		# if user_obj.box_status == 1:
-		# 	print " inside box open "
-		# 	for item in notification_list:
-		# 		if item.status == 0:
-		# 			item.status = 1
-		# 			item.save()
+		if user_obj.box_status == 1:
+			print " inside box open "
+			for item in notification_list:
+				if item.status == 0:
+					item.status = 1
+					item.save()
 
-		# 	user_obj.box_status = 0
-		# 	user_obj.new_notification_count = 0
-		# 	user_obj.save()
+			user_obj.box_status = 0
+			user_obj.new_notification_count = 0
+			user_obj.save()
 
-		# 	notification_count = 0
-
-
-		# print "notification_list = ", notification_list
-
-		# i = 0
-		# n = len(notification_list)
-
-		# while i < n:
-		# 	if i > (notification_count-1):
-		# 		notification_list[i].status = 1
-		# 		notification_list[i].save()
-		# 	i += 1
+			notification_count = 0
 
 		print "notification_count = ", notification_count
 
 		context['user_obj'] = user_obj
 		context['notification_count'] = notification_count
 		context['notifications'] = notification_list
-
-		# item_list = []
-		# item_list = notification_list
-
-		# for item in item_list:
-		#   item.status = True
-		#   item.save()
-
-		# user_obj.new_notification_count = 0
-		# user_obj.save()
 
 		return context
 
@@ -125,18 +103,18 @@ def notification_form_submit(request):
 		myDict = dict(content.iterlists())
 
 		user_id = myDict['user_id']
-		# box_status = myDict['box_status']
+		box_status = myDict['box_status']
 
 		user_obj = models.MyUser.objects.get(id=int(user_id[0]))
 		
-		# if box_status[0] == 'open':
-		# 	print "box is open1"
-		# 	user_obj.box_status = 1
-		# else:
-		# 	print "box is close1"
-		# 	user_obj.box_status = 0
+		if box_status[0] == 'open':
+			print "box is open1"
+			user_obj.box_status = 1
+		else:
+			print "box is close1"
+			user_obj.box_status = 0
 
-		# user_obj.save()
+		user_obj.save()
 
 		unread_list = []
 
