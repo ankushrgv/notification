@@ -17,7 +17,11 @@
                     <form class="notification-form" id="notification-form" method="POST" action="">
                         {% csrf_token %}
                             <input type="hidden" name="user_id" value="{{ user_obj.id }}">
-                            
+                            {% for item in notifications%}
+                                {% if item.status == 0 %}
+                                    <input type="hidden" name="notific_id" value="{{ item.id }}">
+                                {% endif %}
+                            {% endfor %}
 <!--                            <input type="hidden" id="notif-box-status" name="box_status" value="close">    -->
 
                     </form> 

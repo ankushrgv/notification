@@ -160,6 +160,18 @@ function openNav() {
 }
 
 function closeNav() {
+    $('#count').hide();
+    $('.count').each(function() {
+        $this = $(this);
+        $this.html("");
+        
+        var count_value = $this.data("count");
+        
+        count_value = 0;
+        $this.append($("<strong>").text(count_value));
+        $this.data("count", count_value);
+    });
+    
 	document.getElementById("myNav").style.height = "0%";
 	setTimeout(
 		function(){

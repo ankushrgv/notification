@@ -2,6 +2,7 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.http import HttpResponse
+from django.utils.dateformat import DateFormat
 from django.views.generic.base import TemplateView
 
 from apps.notifications import models
@@ -69,40 +70,49 @@ class Index(TemplateView):
 
 		return context
 
+	def get(self, request, *args, **kwargs):
+		print "GET INDEX"
+		print request.COOKIES.get('sessionid')
+		return super(Index, self).get(request, *args, **kwargs)
+
 
 @receiver(post_save, sender=models.Notification)
 def on_notification_post_save(sender, created, **kwargs):
-	print "post save signal triggered"
+
 	if created:
-		print "New notification created (post save)"
 		redis_client = redis.StrictRedis(host='localhost', port=6379, db=0)
 		notification = kwargs['instance']
 		recipient = notification.notified_user
-		print "Recipient: %s" % recipient.id
 
-		# for session in recipient.session_set.all():
-		datetime.timedelta(0,5,30)
-		t = notification.time_of_creation
-		t = t + datetime.timedelta(hours=5, minutes=30)
-		t = str(t)
-		t = t[:-13]
+		sessionid = redis_client.get(recipient.id)
 
-		notifier_name = notification.notifier.first_name + " " + notification.notifier.last_name
-		print " notifier name = ", notifier_name
+		print "Recipient: %s" % recipient.id 
 
-		redis_client.publish(
-			'notifications.%s' % recipient.id,
-			json.dumps(
-				dict(
-					timestamp=t,
-					recipient=notification.notified_user.id,
-					actor=notifier_name,
-					verb=notification.notification_type,
-					action_object=notification.notification_media,
-					notification_id=notification.id 
+		if sessionid:
+			# for session in recipient.session_set.all():
+			datetime.timedelta(0,5,30)
+			t = notification.time_of_creation
+			t = t + datetime.timedelta(hours=5, minutes=30)
+			t = DateFormat(t).format('N j, Y, P')
+			t = str(t)
+			# t = t[:-13]
+
+			notifier_name = notification.notifier.first_name + " " + notification.notifier.last_name
+			print " notifier name = ", notifier_name
+
+			redis_client.publish(
+				'notifications.%s' % sessionid,
+				json.dumps(
+					dict(
+						timestamp=t,
+						recipient=notification.notified_user.id,
+						actor=notifier_name,
+						verb=notification.notification_type,
+						action_object=notification.notification_media,
+						notification_id=notification.id 
+					)
 				)
 			)
-		)
 
 
 def notification_form_submit(request):

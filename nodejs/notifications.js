@@ -19,21 +19,22 @@ io.configure(function(){
 
 io.sockets.on('connection', function (socket) {
 
-    console.log("Incoming connection");
+    var sessionid = socket.handshake.cookie['sessionid'];
+    console.log(sessionid);
+
     // Create redis client
     client = redis.createClient();
 
     // Subscribe to the Redis events channel
-    client.subscribe('notifications.5');
+    client.subscribe('notifications.' + sessionid);
 
     // Grab message from Redis and send to client
     client.on('message', function(channel, message){
-        console.log('on message', message);
         socket.send(message);
     });
 
     // Unsubscribe after a disconnect event
     socket.on('disconnect', function () {
-        client.unsubscribe('notifications.' + socket.handshake.cookie['sessionid']);
+        client.unsubscribe('notifications.' + sessionid);
     });
 });
