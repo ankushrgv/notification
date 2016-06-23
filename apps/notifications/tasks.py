@@ -19,8 +19,8 @@ def CreateNotifications():
 
 		## select a user to be notified randomly
 
-		# to_user = None
-		# to = 0
+		to_user = None
+		to = 0
 		
 		while to_user is None:
 			to = random.randint(lower_limit['id__min'], upper_limit['id__max'])
@@ -30,8 +30,8 @@ def CreateNotifications():
 				pass
 		
 		
-		to = 5
-		to_user = models.MyUser.objects.get(pk=to)
+		# to = 5
+		# to_user = models.MyUser.objects.get(pk=to)
 
 		## select a user to be notified from randomly
 
